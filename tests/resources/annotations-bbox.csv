@@ -1,0 +1,7 @@
+ImageID,Source,LabelName,Confidence,XMin,XMax,YMin,YMax,IsOccluded,IsTruncated,IsGroupOf,IsDepiction,IsInside
+0305e42cf5461f3e,freeform,/m/0dzct,1,0.350658,0.488756,0.256691,0.419788,1,0,0,0,0
+03063cd8d3ab6530,freeform,/m/0dzct,1,0.144591,0.462663,0.206454,0.815645,1,0,0,0,0
+007bddc8f1277b76,freeform,/m/0dzf4,1,0.028670,0.114576,0.306887,0.459835,0,0,0,0,0
+007bddc8f1277b76,freeform,/m/0dzf4,1,0.233170,0.500769,0.431300,0.608218,0,0,0,0,0
+00183df6ffe09093,freeform,/m/01_bhs,1,0.433148,0.483864,0.772021,0.820964,1,0,0,0,0
+00183df6ffe09093,freeform,/m/01g317,1,0.815268,0.920509,0.568443,0.828180,1,0,0,0,0
