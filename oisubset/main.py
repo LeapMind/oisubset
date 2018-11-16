@@ -35,6 +35,7 @@ def main(config):
     df = pd.read_csv(config["annotation_bbox_file"])
 
     df = df[df["LabelName"].isin(target_labels)]
+    df = df.reset_index()
     df = df[df.index < config["max_annotations"]]
     df.to_csv(config["output_dir"] + CLASS_ANNOTATION_FILE_NAME, index=False)
 
