@@ -32,16 +32,19 @@ def main(config):
         writer.writerows(target_classes)
 
     df = pd.read_csv(config["annotation_bbox_file"])
-    print("all df:\n", df)
 
     df = df[df["LabelName"].isin(target_labels)]
     df.to_csv(config["output_dir"] + "annotations-bbox.csv", index=False)
-    print("selected df:\n", df)
 
     # Copy image files to output Directory
+    image_count = 0
     for image_name in set(df["ImageID"]):
-        print(image_name)
+        if image_count % 1000 == 0:
+            print("image index:", image_count)
+            print("copying:", image_name)
+
         shutil.copy(config["image_dir"] + image_name + ".jpg", config["output_dir"] + "images/" + image_name + ".jpg")
+        image_count += 1
 
 
 if __name__ == "__main__":
