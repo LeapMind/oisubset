@@ -6,12 +6,13 @@ import csv
 import pandas as pd
 
 CLASS_DESCRIPTION_FILE_NAME = "class-descriptions.csv"
+CLASS_ANNOTATION_FILE_NAME = "annotations-bbox.csv"
 
 
 def main(config):
     # Create Output Directories
     os.mkdir(config["output_dir"])
-    os.mkdir(config["output_dir"] + "/images")
+    os.mkdir(config["output_dir"] + "images")
 
     target_classes = []
     target_labels = []
@@ -34,7 +35,8 @@ def main(config):
     df = pd.read_csv(config["annotation_bbox_file"])
 
     df = df[df["LabelName"].isin(target_labels)]
-    df.to_csv(config["output_dir"] + "annotations-bbox.csv", index=False)
+    df = df[df.index < config["max_annotations"]]
+    df.to_csv(config["output_dir"] + CLASS_ANNOTATION_FILE_NAME, index=False)
 
     # Copy image files to output Directory
     image_count = 0

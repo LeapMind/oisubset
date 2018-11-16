@@ -7,7 +7,7 @@ target_classes:
 - Human arm
 
 # Number of images
-max_images: 10000
+max_annotations: 10000
 
 # Open Images Resource Setting
 image_dir: ./images
