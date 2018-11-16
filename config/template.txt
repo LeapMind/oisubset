@@ -1,5 +1,0 @@
-TARGET_CLASS=Human face,Human arm
-IMAGE_DIR=./images
-CLASS_DESCRIPTION_FILE=./class-descriptions.csv
-ANNOTATION_BBOX_FILE=./annotations-bbox.csv
-MAX_IMAGES=3000

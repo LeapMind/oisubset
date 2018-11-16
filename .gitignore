@@ -105,3 +105,12 @@ venv.bak/
 
 # macOS
 .DS_Store
+
+# Intellij
+.idea/
+
+# Output Directory
+out/
+
+# Temporary Files
+*tmp.yml

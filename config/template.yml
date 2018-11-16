@@ -1,0 +1,18 @@
+# oisubset config template
+
+# List class names
+# Class name is listed in class-descriptions CSV file
+target_classes:
+- Human face
+- Human arm
+
+# Number of images
+max_images: 10000
+
+# Open Images Resource Setting
+image_dir: ./images
+class_description_file: ./class-descriptions.csv
+annotation_bbox_file: ./annotations-bbox.csv
+
+# Output Setting
+output_dir: ./out
