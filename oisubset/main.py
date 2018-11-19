@@ -16,23 +16,32 @@ def main(config):
     class_df = pd.read_csv(config["class_description_file"], header=None, names=('LabelName', "ClassName"))
     class_df = class_df[class_df["ClassName"].isin(config["target_classes"])]
     class_df.to_csv(config["output_dir"] + OUTPUT_DESCRIPTION_FILE_NAME, index=False, header=None)
-    target_labels = class_df["LabelName"]
 
     bbox_df = pd.read_csv(config["annotation_bbox_file"])
-    bbox_df = bbox_df[bbox_df["LabelName"].isin(target_labels)]
-    bbox_df = bbox_df.reset_index(drop=True)
-    bbox_df = bbox_df[bbox_df.index < config["max_images_per_class"]]
-    bbox_df.to_csv(config["output_dir"] + OUTPUT_ANNOTATION_FILE_NAME, index=False)
 
     # Copy image files to output Directory
-    image_count = 0
-    for image_name in set(bbox_df["ImageID"]):
-        if image_count % 1000 == 0:
-            print("Copy count:", image_count)
-            print("Now copying ImageID:", image_name)
+    result_bbox_df = pd.DataFrame(index=[], columns=bbox_df.columns)
+    for label in class_df["LabelName"]:
+        image_count = 0
+        print("Current Target label: ", class_df[class_df["LabelName"] == label]["ClassName"])
 
-        shutil.copy(config["image_dir"] + image_name + ".jpg", config["output_dir"] + "images/" + image_name + ".jpg")
-        image_count += 1
+        target_bbox_df = bbox_df[bbox_df["LabelName"] == label]
+        target_bbox_df.reset_index(drop=True)
+        target_bbox_df = target_bbox_df[target_bbox_df.index < config["max_images_per_class"]]
+        result_bbox_df = result_bbox_df.append(target_bbox_df)
+
+        for image_name in set(target_bbox_df["ImageID"]):
+            if image_count >= config["max_images_per_class"]:
+                break
+
+            if image_count % 1000 == 0:
+                print("Copy count:", image_count)
+                print("Now copying ImageID:", image_name)
+
+            shutil.copy(config["image_dir"] + image_name + ".jpg", config["output_dir"] + "images/" + image_name + ".jpg")
+            image_count += 1
+
+    result_bbox_df.to_csv(config["output_dir"] + OUTPUT_ANNOTATION_FILE_NAME, index=False)
 
 
 if __name__ == "__main__":
