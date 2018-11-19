@@ -6,8 +6,8 @@ target_classes:
 - Human face
 - Human arm
 
-# Number of images
-max_annotations: 10000
+# Number of Images/Class
+max_images_per_class: 10000
 
 # Open Images Resource Setting
 image_dir: ./images

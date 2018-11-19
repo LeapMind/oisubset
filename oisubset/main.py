@@ -2,49 +2,34 @@ import argparse
 import yaml
 import os
 import shutil
-import csv
 import pandas as pd
 
-CLASS_DESCRIPTION_FILE_NAME = "class-descriptions.csv"
-CLASS_ANNOTATION_FILE_NAME = "annotations-bbox.csv"
+OUTPUT_DESCRIPTION_FILE_NAME = "class-descriptions.csv"
+OUTPUT_ANNOTATION_FILE_NAME = "annotations-bbox.csv"
 
 
 def main(config):
-    # Create Output Directories
+    # Create Output Directory
     os.mkdir(config["output_dir"])
     os.mkdir(config["output_dir"] + "images")
 
-    target_classes = []
-    target_labels = []
+    class_df = pd.read_csv(config["class_description_file"], header=None, names=('LabelName', "ClassName"))
+    class_df = class_df[class_df["ClassName"].isin(config["target_classes"])]
+    class_df.to_csv(config["output_dir"] + OUTPUT_DESCRIPTION_FILE_NAME, index=False, header=None)
+    target_labels = class_df["LabelName"]
 
-    # Fetch class label names
-    with open(config["class_description_file"], "r") as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            if row[1] in config["target_classes"]:
-                target_classes.append(row)
-                target_labels.append(row[0])
-
-    print("target_class_labels:", target_classes)
-
-    # Write class description subset to csv
-    with open(config["output_dir"] + CLASS_DESCRIPTION_FILE_NAME, "w") as csvfile:
-        writer = csv.writer(csvfile, lineterminator="\n")
-        writer.writerows(target_classes)
-
-    df = pd.read_csv(config["annotation_bbox_file"])
-
-    df = df[df["LabelName"].isin(target_labels)]
-    df = df.reset_index(drop=True)
-    df = df[df.index < config["max_annotations"]]
-    df.to_csv(config["output_dir"] + CLASS_ANNOTATION_FILE_NAME, index=False)
+    bbox_df = pd.read_csv(config["annotation_bbox_file"])
+    bbox_df = bbox_df[bbox_df["LabelName"].isin(target_labels)]
+    bbox_df = bbox_df.reset_index(drop=True)
+    bbox_df = bbox_df[bbox_df.index < config["max_images_per_class"]]
+    bbox_df.to_csv(config["output_dir"] + OUTPUT_ANNOTATION_FILE_NAME, index=False)
 
     # Copy image files to output Directory
     image_count = 0
-    for image_name in set(df["ImageID"]):
+    for image_name in set(bbox_df["ImageID"]):
         if image_count % 1000 == 0:
-            print("image index:", image_count)
-            print("copying:", image_name)
+            print("Copy count:", image_count)
+            print("Now copying ImageID:", image_name)
 
         shutil.copy(config["image_dir"] + image_name + ".jpg", config["output_dir"] + "images/" + image_name + ".jpg")
         image_count += 1
