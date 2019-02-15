@@ -36,7 +36,7 @@ def main(config):
         print("Current Target label: ", class_df[class_df["LabelName"] == label].values)
 
         target_bbox_df = bbox_df[bbox_df["LabelName"] == label]
-        target_bbox_df.reset_index(drop=True)
+        target_bbox_df.reset_index(drop=True, inplace=True)
         target_bbox_df = target_bbox_df[target_bbox_df.index < config["max_images_per_class"]]
         result_bbox_df = result_bbox_df.append(target_bbox_df)
 
